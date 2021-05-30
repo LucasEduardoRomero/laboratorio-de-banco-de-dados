@@ -1,0 +1,25 @@
+query 1
+
+select cliente.nome, AVG(venda.quantidade * produto.valor_produto) as "Valor Gasto"
+from venda, cliente, produto
+where venda.codigo_cliente = cliente.codigo_cliente and venda.codigo_produto = produto.codigo_produto
+group by venda.codigo_cliente, cliente.nome
+having count(venda.codigo_cliente) > 1
+order by AVG(venda.quantidade * produto.valor_produto) desc;
+
+
+query 2
+
+select cliente.nome as "Cliente", produto.nome as "Produto", SUM(venda.quantidade) as "Quantidade do Produto" 
+from venda, cliente, produto
+where venda.codigo_cliente = cliente.codigo_cliente and venda.codigo_produto = produto.codigo_produto
+group by venda.codigo_cliente, cliente.nome, venda.codigo_produto, produto.nome
+order by SUM(venda.quantidade) desc;
+
+query 3
+
+select cliente.nome as "Cliente", sum(venda.quantidade) as "Itens Comprados"
+from cliente, venda
+where cliente.codigo_cliente = venda.codigo_cliente
+group by cliente.nome
+having sum(venda.quantidade) > 10;

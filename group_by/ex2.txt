@@ -1,0 +1,56 @@
+create table public.cliente (
+	codigo_cliente integer,
+	PRIMARY KEY (codigo_cliente),
+	nome character varying,
+	data_nascimento date	
+);
+
+create table public.produto (
+	codigo_produto integer,
+	PRIMARY KEY (codigo_produto),
+	nome character varying, 
+	valor_produto float,
+	unidade character varying	
+);
+
+create table public.venda (
+	codigo_venda integer,
+	PRIMARY KEY (codigo_venda),
+	data_hora_venda timestamp,
+	quantidade integer,
+	codigo_produto integer,
+	CONSTRAINT FK_VendaProduto FOREIGN KEY (codigo_produto) references public.produto(codigo_produto),
+	codigo_cliente integer,
+	CONSTRAINT FK_VendaCliente FOREIGN KEY (codigo_cliente) references public.cliente(codigo_cliente)
+);
+
+INSERT INTO public.cliente (codigo_cliente, nome, data_nascimento) VALUES (1, 'Lucas', '2001-06-27'),
+(2, 'Rafaela', '1998-10-01'),
+(3, 'Joaquim', '1969-06-18');
+
+INSERT INTO public.produto (codigo_produto, nome, valor_produto,unidade) VALUES (1, 'Pão', 0.55, 'unidade'),
+(2, 'Calabresa', 25, 'kilo'),
+(3, 'Manteiga', 8.45, 'unidade');
+
+INSERT INTO public.venda (codigo_venda, data_hora_venda, codigo_produto, codigo_cliente, quantidade) VALUES (1, '2020-12-19 10:23:54', 1, 1, 6),
+(2, '2020-12-19 10:23:54', 2, 1, 1),
+(3, '2020-12-19 10:23:54', 3, 1, 1),
+
+(4, '2021-01-02 07:00:00', 1,2, 10),
+(5, '2021-01-03 10:00:00', 2,2, 1),
+
+(6, '2021-01-10 10:10:00', 1,3, 8),
+(7, '2021-01-10 13:05:00', 3,3, 1);
+
+
+select cliente.nome, sum(venda.quantidade * produto.valor_produto) as valor_total
+from venda, cliente, produto
+where venda.codigo_produto = produto.codigo_produto and venda.codigo_cliente = cliente.codigo_cliente
+group by cliente.nome
+order by valor_total desc;
+
+
+select cliente.nome as "nome do cliente", produto.nome as "nome do produto", sum(venda.quantidade) as "quantidade comprada"
+from venda, cliente, produto
+where venda.codigo_produto = produto.codigo_produto and venda.codigo_cliente = cliente.codigo_cliente
+group by cliente.nome,produto.nome;

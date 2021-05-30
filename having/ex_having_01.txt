@@ -1,0 +1,19 @@
+---------------------      query 1     ----------------------------------
+
+select editora.nome, count(livro.titulo) as "Quantia de Livros"
+from editora, livro
+where editora.codigo_editora = livro.codigo_editora
+group by livro.codigo_editora, editora.nome
+having count(livro.titulo) > 1
+order by count(livro.titulo) DESC;
+
+
+
+---------------------      query 2     ----------------------------------
+
+select assunto.descricao as "Assunto", count(livro.codigo_assunto) as "Quantia de Livros"
+from assunto, livro
+where assunto.codigo_assunto = livro.codigo_assunto
+group by livro.codigo_assunto, assunto.descricao
+having count(livro.codigo_assunto) > 1
+order by count(livro.titulo) DESC;
